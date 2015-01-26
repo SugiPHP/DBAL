@@ -42,7 +42,9 @@ class Connection extends PDO implements PdoInterface
 	public function connect()
 	{
 		if (!$this->pdo) {
-			$this->pdo = parent::__construct($this->dsn, $this->username, $this->password, $this->options);
+			parent::__construct($this->dsn, $this->username, $this->password, $this->options);
+
+			$this->pdo = $this;
 		}
 	}
 
@@ -51,5 +53,89 @@ class Connection extends PDO implements PdoInterface
 		$this->connect();
 
 		return parent::setAttribute($attribute, $value);
+	}
+
+	public function getAttribute($attribute)
+	{
+		$this->connect();
+
+		return parent::getAttribute($attribute);
+	}
+
+	public function errorCode()
+	{
+		$this->connect();
+
+		return parent::errorCode();
+	}
+
+	public function errorInfo()
+	{
+		$this->connect();
+
+		return parent::errorInfo();
+	}
+
+	public function exec($statement)
+	{
+		$this->connect();
+
+		return parent::exec($statement);
+	}
+
+	public function query($statement)
+	{
+		$this->connect();
+
+		return parent::query($statement);
+	}
+
+	public function prepare($statement, $options = array())
+	{
+		$this->connect();
+
+		return parent::prepare($statement, $options);
+	}
+
+	public function lastInsertId($name = null)
+	{
+		$this->connect();
+
+		return parent::prepare($statement, $options);
+	}
+
+	public function quote($string, $parameter_type = self::PARAM_STR)
+	{
+		$this->connect();
+
+		return parent::quote($string, $parameter_type);
+	}
+
+	public function beginTransaction()
+	{
+		$this->connect();
+
+		return parent::beginTransaction();
+	}
+
+	public function inTransaction()
+	{
+		$this->connect();
+
+		return parent::inTransaction();
+	}
+
+	public function commit()
+	{
+		$this->connect();
+
+		return parent::commit();
+	}
+
+	public function rollBack()
+	{
+		$this->connect();
+
+		return parent::rollBack();
 	}
 }
