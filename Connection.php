@@ -33,7 +33,6 @@ class Connection extends PDO implements PdoInterface
 	 */
 	public function __construct($dsn, $username = "", $password = "", array $options = array())
 	{
-		echo "PDO Constructor.";
 		$this->dsn = $dsn;
 		$this->username = $username;
 		$this->password = $password;
