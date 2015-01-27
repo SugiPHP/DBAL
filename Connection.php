@@ -50,7 +50,9 @@ class Connection extends PDO implements PdoInterface
 		// Set error handling to Exception
 		self::ATTR_ERRMODE            => self::ERRMODE_EXCEPTION,
 		// Fetch return results as associative array
-		self::ATTR_DEFAULT_FETCH_MODE => self::FETCH_ASSOC
+		self::ATTR_DEFAULT_FETCH_MODE => self::FETCH_ASSOC,
+
+		self::ATTR_STATEMENT_CLASS    => array("\\SugiPHP\\DBAL\\Statement"),
 	);
 
 	protected $pdo;
