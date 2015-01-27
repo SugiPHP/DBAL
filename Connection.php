@@ -7,7 +7,7 @@
  * @license http://opensource.org/licenses/mit-license.php (MIT License)
  */
 
-namespace DBAL;
+namespace SugiPHP\DBAL;
 
 use PDO;
 
