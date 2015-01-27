@@ -46,7 +46,12 @@ class Connection extends PDO implements PdoInterface
 	 *
 	 * @var array
 	 */
-	protected $attributes = array();
+	protected $attributes = array(
+		// Set error handling to Exception
+		self::ATTR_ERRMODE            => self::ERRMODE_EXCEPTION,
+		// Fetch return results as associative array
+		self::ATTR_DEFAULT_FETCH_MODE => self::FETCH_ASSOC
+	);
 
 	protected $pdo;
 
@@ -194,7 +199,6 @@ class Connection extends PDO implements PdoInterface
 	public function prepare($statement, $options = array())
 	{
 		$this->connect();
-		dump($this->pdo);exit;
 
 		return parent::prepare($statement, $options);
 	}
