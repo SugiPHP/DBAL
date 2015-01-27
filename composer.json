@@ -1,0 +1,22 @@
+{
+    "name": "sugiphp/dbal",
+    "type": "library",
+    "description": "SugiPHP Database abstraction layer on top of PDO",
+    "keywords": ["PDO", "Database", "mysql", "sqlite", "pgsql", "DBAL"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Plamen Popov",
+            "email": "tzappa@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "SugiPHP\\DBAL\\": ""
+        }
+    },
+    "minimum-stability": "dev"
+}
