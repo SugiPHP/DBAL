@@ -23,6 +23,8 @@ class Connection extends PDO implements PdoInterface
 
 	protected $options;
 
+	protected $attributes = array();
+
 	/**
 	 * Needed for establishing a lazy connection.
 	 *
@@ -45,14 +47,25 @@ class Connection extends PDO implements PdoInterface
 			parent::__construct($this->dsn, $this->username, $this->password, $this->options);
 
 			$this->pdo = $this;
+
+			foreach ($this->attributes as $attribute => $value) {
+				parent::setAttribute($attribute, $value);
+			}
 		}
 	}
 
 	public function setAttribute($attribute, $value)
 	{
-		$this->connect();
+		// If the connection is established set attribute right away
+		if ($this->pdo) {
+			return parent::setAttribute($attribute, $value);
+		}
 
-		return parent::setAttribute($attribute, $value);
+		// otherwise store it until connection is established
+		$this->attributes[$attribute] = $value;
+
+		// 100% success rate!
+		return true;
 	}
 
 	public function getAttribute($attribute)
