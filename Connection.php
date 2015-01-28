@@ -51,8 +51,6 @@ class Connection extends PDO implements PdoInterface
 		self::ATTR_ERRMODE            => self::ERRMODE_EXCEPTION,
 		// Fetch return results as associative array
 		self::ATTR_DEFAULT_FETCH_MODE => self::FETCH_ASSOC,
-
-		self::ATTR_STATEMENT_CLASS    => array("\\SugiPHP\\DBAL\\Statement"),
 	);
 
 	protected $pdo;
@@ -87,6 +85,7 @@ class Connection extends PDO implements PdoInterface
 		}
 
 		$event = $this->startEvent(__FUNCTION__);
+		// establish database connection
 		parent::__construct($this->dsn, $this->username, $this->password, $this->options);
 		$this->endEvent($event);
 
@@ -95,6 +94,9 @@ class Connection extends PDO implements PdoInterface
 		foreach ($this->attributes as $attribute => $value) {
 			parent::setAttribute($attribute, $value);
 		}
+
+		// Use custom PDOStatement to log/profile execute methods
+		parent::setAttribute(PDO::ATTR_STATEMENT_CLASS, array("\\SugiPHP\\DBAL\\Statement", array($this)));
 	}
 
 	/**
@@ -221,7 +223,7 @@ class Connection extends PDO implements PdoInterface
 	 * Prepares a statement for execution and returns a statement object.
 	 *
 	 * @param string $statement
-	 * @param array $driver_options
+	 * @param array $options Driver options
 	 *
 	 * @return PDOStatement, FALSE or emits PDOException (depending on error handling).
 	 */
@@ -254,7 +256,7 @@ class Connection extends PDO implements PdoInterface
 	 *
 	 * @return string
 	 */
-	public function quote($string, $parameter_type = self::PARAM_STR)
+	public function quote($string, $parameter_type = PDO::PARAM_STR)
 	{
 		$this->connect();
 
@@ -315,7 +317,7 @@ class Connection extends PDO implements PdoInterface
 		$this->eventListener = $callable;
 	}
 
-	protected function startEvent($function, $statement = null)
+	public function startEvent($function, $statement = null)
 	{
 		if (!$this->eventListener) {
 			return ;
@@ -330,7 +332,7 @@ class Connection extends PDO implements PdoInterface
 		return $event;
 	}
 
-	protected function endEvent($event)
+	public function endEvent($event)
 	{
 		if ($event && $this->eventListener) {
 			$event["end"] = microtime(true);

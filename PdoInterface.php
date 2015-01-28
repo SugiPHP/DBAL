@@ -11,6 +11,9 @@ namespace SugiPHP\DBAL;
 
 use PDO;
 
+/**
+ * PDO Interface
+ */
 interface PdoInterface
 {
 	/**
@@ -87,7 +90,7 @@ interface PdoInterface
 	 * Prepares a statement for execution and returns a statement object.
 	 *
 	 * @param string $statement
-	 * @param array $driver_options
+	 * @param array $options Driver options
 	 *
 	 * @return PDOStatement, FALSE or emits PDOException (depending on error handling).
 	 */
@@ -110,7 +113,7 @@ interface PdoInterface
 	 *
 	 * @return string
 	 */
-	public function quote($string, $parameter_type = self::PARAM_STR);
+	public function quote($string, $parameter_type = PDO::PARAM_STR);
 
 	/**
 	 * Initiates a transaction.

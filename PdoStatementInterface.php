@@ -93,9 +93,9 @@ interface PdoStatementInterface
 	/**
 	 * Executes a prepared statement.
 	 *
-	 * @param array $input_parameters
+	 * @param array $parameters Input parameters
 	 *
 	 * @return boolean TRUE on success or FALSE on failure.
 	 */
-	public function execute($input_parameters = null);
+	public function execute($parameters = null);
 }
