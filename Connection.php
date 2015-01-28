@@ -56,6 +56,7 @@ class Connection extends PDO implements PdoInterface
 	);
 
 	protected $pdo;
+	protected $eventListener;
 
 	/**
 	 * Needed for establishing a lazy connection.
@@ -81,14 +82,18 @@ class Connection extends PDO implements PdoInterface
 	 */
 	public function connect()
 	{
-		if (!$this->pdo) {
-			parent::__construct($this->dsn, $this->username, $this->password, $this->options);
+		if ($this->pdo) {
+			return ;
+		}
 
-			$this->pdo = $this;
+		$event = $this->startEvent(__FUNCTION__);
+		parent::__construct($this->dsn, $this->username, $this->password, $this->options);
+		$this->endEvent($event);
 
-			foreach ($this->attributes as $attribute => $value) {
-				parent::setAttribute($attribute, $value);
-			}
+		$this->pdo = $this;
+
+		foreach ($this->attributes as $attribute => $value) {
+			parent::setAttribute($attribute, $value);
 		}
 	}
 
@@ -173,7 +178,11 @@ class Connection extends PDO implements PdoInterface
 	{
 		$this->connect();
 
-		return parent::exec($statement);
+		$event = $this->startEvent(__FUNCTON__, $statement);
+		$result = parent::exec($statement);
+		$this->endEvent($event);
+
+		return $result;
 	}
 
 	/**
@@ -187,7 +196,11 @@ class Connection extends PDO implements PdoInterface
 	{
 		$this->connect();
 
-		return parent::query($statement);
+		$event = $this->startEvent(__FUNCTION__, $statement);
+		$result = parent::query($statement);
+		$this->endEvent($event);
+
+		return $result;
 	}
 
 	/**
@@ -240,6 +253,7 @@ class Connection extends PDO implements PdoInterface
 	 * @return boolean TRUE on success or FALSE on failure.
 	 */
 	public function beginTransaction()
+
 	{
 		$this->connect();
 
@@ -280,5 +294,38 @@ class Connection extends PDO implements PdoInterface
 		$this->connect();
 
 		return parent::rollBack();
+	}
+
+	public function setEventListener($callable)
+	{
+		$this->eventListener = $callable;
+	}
+
+	protected function startEvent($function, $statement = null)
+	{
+		if (!$this->eventListener) {
+			return ;
+		}
+
+		$event = array(
+			"function"  => $function,
+			"statement" => $statement,
+			"start"     => microtime(true),
+		);
+
+		return $event;
+	}
+
+	protected function endEvent($event)
+	{
+		if ($event && $this->eventListener) {
+			$event["end"] = microtime(true);
+			$event["duration"] = $event["end"] - $event["start"];
+
+			$func = $this->eventListener;
+			$func($event);
+		}
+
+		return $event;
 	}
 }
