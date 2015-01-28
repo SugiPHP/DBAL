@@ -187,6 +187,9 @@ class Connection extends PDO implements PdoInterface
 
 	/**
 	 * Executes an SQL statement, returning a result set as a PDOStatement object
+	 * NOTE: The query() method can receive not only one, but 3 or 4 parameters.
+	 *
+	 * @see http://php.net/manual/en/pdo.query.php
 	 *
 	 * @param string $statement
 	 *
@@ -196,8 +199,19 @@ class Connection extends PDO implements PdoInterface
 	{
 		$this->connect();
 
+		$args = func_get_args();
+		$argsCnt = count($args);
+
 		$event = $this->startEvent(__FUNCTION__, $statement);
-		$result = parent::query($statement);
+		if ($argsCnt == 2) {
+			$result = parent::query($statement, $args[1]);
+		} elseif ($argsCnt == 3) {
+			$result = parent::query($statement, $args[1], $args[2]);
+		} elseif ($argsCnt == 4) {
+			$result = parent::query($statement, $args[1], $args[2], $args[3]);
+		} else {
+			$result = parent::query($statement);
+		}
 		$this->endEvent($event);
 
 		return $result;

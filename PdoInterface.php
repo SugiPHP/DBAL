@@ -72,7 +72,10 @@ interface PdoInterface
 	public function exec($statement);
 
 	/**
-	 * Executes an SQL statement, returning a result set as a PDOStatement object
+	 * Executes an SQL statement, returning a result set as a PDOStatement object.
+	 * NOTE: The query() method can receive not only one, but 3 or 4 parameters.
+	 *
+	 * @see http://php.net/manual/en/pdo.query.php
 	 *
 	 * @param string $statement
 	 *
