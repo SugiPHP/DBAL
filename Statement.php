@@ -11,7 +11,7 @@ namespace SugiPHP\DBAL;
 
 use PDOStatement;
 
-class Statement extends PDOStatement/* , PdoStatementInterface*/
+class Statement extends PDOStatement implements PdoStatementInterface
 {
 
 }
