@@ -245,7 +245,7 @@ class Connection extends PDO implements PdoInterface
 	{
 		$this->connect();
 
-		return parent::prepare($statement, $options);
+		return parent::lastInsertId($name);
 	}
 
 	/**
