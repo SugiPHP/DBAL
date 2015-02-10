@@ -312,7 +312,7 @@ class Connection extends PDO implements PdoInterface
 		return parent::rollBack();
 	}
 
-	public function setEventListener($callable)
+	public function setEventListener(callable $callable)
 	{
 		$this->eventListener = $callable;
 	}
